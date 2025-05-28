@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -47,12 +46,12 @@ const AdminDashboard = () => {
     }
     
     // Apply rating filter
-    if (filters.rating) {
+    if (filters.rating && filters.rating !== "all") {
       result = result.filter(item => item.rating === parseInt(filters.rating));
     }
     
     // Apply category filter
-    if (filters.category) {
+    if (filters.category && filters.category !== "all") {
       result = result.filter(item => item.category === filters.category);
     }
     
@@ -158,7 +157,7 @@ const AdminDashboard = () => {
                     <SelectValue placeholder="All ratings" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All ratings</SelectItem>
+                    <SelectItem value="all">All ratings</SelectItem>
                     <SelectItem value="5">5 Stars</SelectItem>
                     <SelectItem value="4">4 Stars</SelectItem>
                     <SelectItem value="3">3 Stars</SelectItem>
@@ -178,7 +177,7 @@ const AdminDashboard = () => {
                     <SelectValue placeholder="All categories" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All categories</SelectItem>
+                    <SelectItem value="all">All categories</SelectItem>
                     {FEEDBACK_CATEGORIES.map(category => (
                       <SelectItem key={category.id} value={category.id}>
                         {category.label}
