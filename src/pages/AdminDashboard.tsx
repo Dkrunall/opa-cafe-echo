@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { useFeedback } from "@/context/FeedbackContext";
 import { Feedback } from "@/context/FeedbackContext";
 import { FEEDBACK_CATEGORIES } from "@/lib/constants";
 import { useToast } from "@/components/ui/use-toast";
+import * as XLSX from 'xlsx';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -86,10 +88,78 @@ const AdminDashboard = () => {
   };
 
   const handleExport = () => {
-    toast({
-      title: "Export initiated",
-      description: "Your feedback data would be exported in a real application."
-    });
+    if (feedback.length === 0) {
+      toast({
+        title: "No data to export",
+        description: "There is no feedback data available to export.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      // Prepare data for Excel export
+      const exportData = feedback.map((item, index) => ({
+        'ID': item.id,
+        'Date': new Date(item.createdAt).toLocaleDateString(),
+        'Rating': item.rating,
+        'Category': item.category || 'N/A',
+        'Emoji Reaction': item.emojiReaction || 'N/A',
+        'Message': item.message || 'N/A',
+        'Customer Name': item.isAnonymous ? 'Anonymous' : (item.name || 'N/A'),
+        'Email': item.isAnonymous ? 'Anonymous' : (item.email || 'N/A'),
+        'Submission Type': item.isAnonymous ? 'Anonymous' : 'Named'
+      }));
+
+      // Create workbook and worksheet
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(exportData);
+
+      // Add some styling to the headers
+      const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
+        if (!ws[cellAddress]) continue;
+        ws[cellAddress].s = {
+          font: { bold: true },
+          fill: { fgColor: { rgb: "EEEEEE" } }
+        };
+      }
+
+      // Auto-size columns
+      const colWidths = exportData.reduce((acc: any[], row) => {
+        Object.keys(row).forEach((key, index) => {
+          const value = String(row[key as keyof typeof row] || '');
+          const width = Math.max(value.length, key.length) + 2;
+          acc[index] = Math.max(acc[index] || 0, width);
+        });
+        return acc;
+      }, []);
+      
+      ws['!cols'] = colWidths.map(width => ({ width }));
+
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Feedback Data');
+
+      // Generate filename with current date
+      const date = new Date().toISOString().split('T')[0];
+      const filename = `OPA_Cafe_Feedback_${date}.xlsx`;
+
+      // Export file
+      XLSX.writeFile(wb, filename);
+
+      toast({
+        title: "Export successful",
+        description: `Feedback data exported as ${filename}`,
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: "Export failed",
+        description: "There was an error exporting the data. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleReply = (email?: string) => {
@@ -110,7 +180,7 @@ const AdminDashboard = () => {
           <Logo />
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={handleExport}>
-              Export Data
+              Export to Excel
             </Button>
             <Button variant="ghost" onClick={handleLogout}>
               Logout
