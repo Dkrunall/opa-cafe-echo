@@ -36,16 +36,30 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
 
   // Load feedback from localStorage on component mount
   useEffect(() => {
+    console.log('FeedbackProvider mounting, loading from localStorage...');
     clearExpiredFeedback(); // Clear any expired data first
     const storedFeedback = loadFeedbackFromStorage();
-    setFeedback(storedFeedback);
+    if (storedFeedback.length > 0) {
+      setFeedback(storedFeedback);
+      console.log('Loaded feedback from storage:', storedFeedback.length, 'items');
+    }
   }, []);
+
+  // Save to localStorage whenever feedback changes
+  useEffect(() => {
+    if (feedback.length > 0) {
+      console.log('Feedback changed, saving to localStorage:', feedback.length, 'items');
+      saveFeedbackToStorage(feedback);
+    }
+  }, [feedback]);
 
   const addFeedback = (newFeedback: Feedback) => {
     console.log('Adding new feedback:', newFeedback);
-    const updatedFeedback = [newFeedback, ...feedback];
-    setFeedback(updatedFeedback);
-    saveFeedbackToStorage(updatedFeedback);
+    setFeedback(prevFeedback => {
+      const updatedFeedback = [newFeedback, ...prevFeedback];
+      console.log('Total feedback after adding:', updatedFeedback.length);
+      return updatedFeedback;
+    });
   };
 
   const getRandomThankYouMessage = () => {
@@ -58,13 +72,16 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
     // In a real app, this would validate against a secure backend
     if (email === "admin@feedback.com" && password === "admin123") {
       setIsAdmin(true);
+      console.log('Admin logged in successfully');
       return true;
     }
+    console.log('Admin login failed');
     return false;
   };
 
   const logoutAdmin = () => {
     setIsAdmin(false);
+    console.log('Admin logged out');
   };
 
   return (
