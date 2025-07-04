@@ -174,15 +174,23 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-opa-cream">
+    <div className="min-h-screen bg-red-cream font-albura">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
           <Logo />
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={handleExport}>
+            <Button 
+              variant="outline" 
+              onClick={handleExport}
+              className="font-albura"
+            >
               Export to Excel
             </Button>
-            <Button variant="ghost" onClick={handleLogout}>
+            <Button 
+              variant="ghost" 
+              onClick={handleLogout}
+              className="font-albura"
+            >
               Logout
             </Button>
           </div>
@@ -190,7 +198,7 @@ const AdminDashboard = () => {
       </header>
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <h1 className="text-3xl font-playfair font-semibold text-opa-brown mb-6">
+        <h1 className="text-3xl font-albura font-semibold text-red-brown mb-6">
           Admin Dashboard
         </h1>
         
@@ -200,30 +208,30 @@ const AdminDashboard = () => {
         
         <Card className="bg-white shadow-sm mb-8">
           <CardHeader className="pb-3">
-            <CardTitle className="text-xl font-playfair text-opa-brown">
+            <CardTitle className="text-xl font-albura text-red-brown">
               Filter Feedback
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <Label htmlFor="search">Search</Label>
+                <Label htmlFor="search" className="font-albura">Search</Label>
                 <Input
                   id="search"
                   placeholder="Search by name, email, or content"
-                  className="bg-white"
+                  className="bg-white font-albura"
                   value={filters.search}
                   onChange={(e) => setFilters({...filters, search: e.target.value})}
                 />
               </div>
               
               <div>
-                <Label htmlFor="rating">Rating</Label>
+                <Label htmlFor="rating" className="font-albura">Rating</Label>
                 <Select
                   value={filters.rating}
                   onValueChange={(value) => setFilters({...filters, rating: value})}
                 >
-                  <SelectTrigger className="bg-white">
+                  <SelectTrigger className="bg-white font-albura">
                     <SelectValue placeholder="All ratings" />
                   </SelectTrigger>
                   <SelectContent>
@@ -238,12 +246,12 @@ const AdminDashboard = () => {
               </div>
               
               <div>
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="category" className="font-albura">Category</Label>
                 <Select
                   value={filters.category}
                   onValueChange={(value) => setFilters({...filters, category: value})}
                 >
-                  <SelectTrigger className="bg-white">
+                  <SelectTrigger className="bg-white font-albura">
                     <SelectValue placeholder="All categories" />
                   </SelectTrigger>
                   <SelectContent>
@@ -258,12 +266,12 @@ const AdminDashboard = () => {
               </div>
               
               <div>
-                <Label htmlFor="date">Date Range</Label>
+                <Label htmlFor="date" className="font-albura">Date Range</Label>
                 <Select
                   value={filters.dateRange}
                   onValueChange={(value) => setFilters({...filters, dateRange: value})}
                 >
-                  <SelectTrigger className="bg-white">
+                  <SelectTrigger className="bg-white font-albura">
                     <SelectValue placeholder="All time" />
                   </SelectTrigger>
                   <SelectContent>
@@ -279,12 +287,12 @@ const AdminDashboard = () => {
         </Card>
         
         <div className="space-y-6">
-          <h2 className="text-xl font-playfair text-opa-brown">
+          <h2 className="text-xl font-albura text-red-brown">
             Feedback Results ({filteredFeedback.length})
           </h2>
           
           {filteredFeedback.length === 0 ? (
-            <div className="bg-white rounded-lg p-8 text-center text-muted-foreground">
+            <div className="bg-white rounded-lg p-8 text-center text-muted-foreground font-albura">
               No feedback found matching your filters.
             </div>
           ) : (
@@ -296,32 +304,32 @@ const AdminDashboard = () => {
                       <div className="space-y-3 flex-1">
                         <div className="flex items-center gap-2">
                           <StarRating rating={item.rating} onChange={() => {}} readOnly />
-                          <span className="text-muted-foreground text-sm">
+                          <span className="text-muted-foreground text-sm font-albura">
                             {new Date(item.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                         
                         {item.category && (
                           <div>
-                            <span className="inline-block bg-opa-green bg-opacity-10 text-opa-green text-xs px-2 py-1 rounded-full capitalize">
+                            <span className="inline-block text-xs px-2 py-1 rounded-full capitalize font-albura" style={{ backgroundColor: '#510909', color: 'white' }}>
                               {item.category}
                             </span>
                           </div>
                         )}
                         
                         {item.message && (
-                          <p className="text-opa-brown">{item.message}</p>
+                          <p className="text-red-brown font-albura">{item.message}</p>
                         )}
                       </div>
                       
                       <div className="shrink-0">
                         <div className="text-right">
                           {item.isAnonymous ? (
-                            <p className="text-sm text-muted-foreground">Anonymous</p>
+                            <p className="text-sm text-muted-foreground font-albura">Anonymous</p>
                           ) : (
                             <>
-                              {item.name && <p className="font-medium">{item.name}</p>}
-                              {item.email && <p className="text-sm text-muted-foreground">{item.email}</p>}
+                              {item.name && <p className="font-medium font-albura">{item.name}</p>}
+                              {item.email && <p className="text-sm text-muted-foreground font-albura">{item.email}</p>}
                             </>
                           )}
                         </div>
@@ -330,7 +338,8 @@ const AdminDashboard = () => {
                           <Button 
                             size="sm" 
                             variant={item.email ? "default" : "secondary"}
-                            className={item.email ? "bg-opa-green hover:bg-opa-green/90" : ""}
+                            className="font-albura"
+                            style={item.email ? { backgroundColor: '#510909' } : {}}
                             onClick={() => handleReply(item.email)}
                           >
                             Reply

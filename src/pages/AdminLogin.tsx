@@ -43,23 +43,23 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-opa-cream p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-red-cream p-6 font-albura">
       <Card className="w-full max-w-md shadow-lg animate-scale-in">
         <CardHeader className="text-center">
-          <Logo />
-          <div className="h-px bg-opa-gold w-16 mx-auto my-3" />
-          <CardTitle className="mt-2 text-2xl font-playfair">Admin Login</CardTitle>
+          <Logo size="large" />
+          <div className="h-px bg-red-gold w-16 mx-auto my-3" />
+          <CardTitle className="mt-2 text-2xl font-albura text-red-brown">Admin Login</CardTitle>
         </CardHeader>
         
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="font-albura">Email</Label>
               <Input 
                 id="email" 
                 type="email" 
-                placeholder="admin@opacafe.com"
-                className="bg-white"
+                placeholder="admin@feedback.com"
+                className="bg-white font-albura"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -67,12 +67,12 @@ const AdminLogin = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="font-albura">Password</Label>
               <Input 
                 id="password" 
                 type="password" 
                 placeholder="••••••••"
-                className="bg-white"
+                className="bg-white font-albura"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -81,7 +81,8 @@ const AdminLogin = () => {
             
             <Button 
               type="submit" 
-              className="w-full bg-opa-green hover:bg-opa-green/90"
+              className="w-full font-albura"
+              style={{ backgroundColor: '#510909' }}
               disabled={isLoading}
             >
               {isLoading ? "Logging in..." : "Login"}
@@ -92,7 +93,7 @@ const AdminLogin = () => {
         <CardFooter className="flex justify-center">
           <Button 
             variant="link" 
-            className="text-muted-foreground hover:text-opa-brown"
+            className="text-muted-foreground hover:text-red-brown font-albura"
             onClick={() => navigate('/')}
           >
             Back to Home
@@ -100,8 +101,8 @@ const AdminLogin = () => {
         </CardFooter>
       </Card>
       
-      <div className="mt-4 text-center text-sm text-muted-foreground">
-        <p>Demo login: admin@opacafe.com / admin123</p>
+      <div className="mt-4 text-center text-sm text-muted-foreground font-albura">
+        <p>Demo login: admin@feedback.com / admin123</p>
       </div>
     </div>
   );
