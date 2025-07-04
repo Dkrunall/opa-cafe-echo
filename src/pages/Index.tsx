@@ -15,7 +15,7 @@ const Index = () => {
           <Logo size="large" />
           <div className="h-px bg-opa-gold w-24 mx-auto my-4" />
           <p className="text-lg text-opa-brown mt-6">
-            We'd love to hear about your experience at OPA Bar & Cafe.
+            We'd love to hear about your experience.
           </p>
           <p className="mt-3 text-muted-foreground">
             Your feedback helps us create a better experience for everyone.

@@ -19,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				albura: ['Albura', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -27,7 +30,7 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				opa: {
 					cream: '#F5F1E8',
-					green: '#5C6B4E',
+					green: '#510909',
 					gold: '#D4AF37',
 					brown: '#3A2E28'
 				},
