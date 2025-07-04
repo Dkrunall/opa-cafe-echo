@@ -1,6 +1,7 @@
 
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { THANK_YOU_MESSAGES } from "@/lib/constants";
+import { saveFeedbackToStorage, loadFeedbackFromStorage, clearExpiredFeedback } from "@/lib/localStorage";
 
 export type Feedback = {
   id: string;
@@ -29,14 +30,22 @@ type FeedbackContextType = {
 const FeedbackContext = createContext<FeedbackContextType | undefined>(undefined);
 
 export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
-  // Start with empty array - only real user feedback will be shown
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [currentFeedback, setCurrentFeedback] = useState<Partial<Feedback>>({});
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
+  // Load feedback from localStorage on component mount
+  useEffect(() => {
+    clearExpiredFeedback(); // Clear any expired data first
+    const storedFeedback = loadFeedbackFromStorage();
+    setFeedback(storedFeedback);
+  }, []);
+
   const addFeedback = (newFeedback: Feedback) => {
     console.log('Adding new feedback:', newFeedback);
-    setFeedback([newFeedback, ...feedback]);
+    const updatedFeedback = [newFeedback, ...feedback];
+    setFeedback(updatedFeedback);
+    saveFeedbackToStorage(updatedFeedback);
   };
 
   const getRandomThankYouMessage = () => {
@@ -47,7 +56,7 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
   const loginAdmin = (email: string, password: string) => {
     // This is a simple mock implementation
     // In a real app, this would validate against a secure backend
-    if (email === "admin@opacafe.com" && password === "admin123") {
+    if (email === "admin@feedback.com" && password === "admin123") {
       setIsAdmin(true);
       return true;
     }
