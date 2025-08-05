@@ -53,57 +53,13 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [feedback]);
 
-  const addFeedback = async (newFeedback: Feedback) => {
+  const addFeedback = (newFeedback: Feedback) => {
     console.log('Adding new feedback:', newFeedback);
-    
-    // Save to Google Sheets if URL is provided
-    await saveToGoogleSheets(newFeedback);
-    
     setFeedback(prevFeedback => {
       const updatedFeedback = [newFeedback, ...prevFeedback];
       console.log('Total feedback after adding:', updatedFeedback.length);
       return updatedFeedback;
     });
-  };
-
-  const saveToGoogleSheets = async (feedback: Feedback) => {
-    // Replace this URL with your Google Apps Script web app URL
-    const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
-    
-    // Skip if no URL is configured
-    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-      console.log('Google Sheets URL not configured');
-      return;
-    }
-
-    try {
-      const payload = {
-        id: feedback.id,
-        date: feedback.createdAt,
-        rating: feedback.rating,
-        category: feedback.category,
-        emojiReaction: feedback.emojiReaction,
-        message: feedback.message,
-        name: feedback.isAnonymous ? 'Anonymous' : feedback.name,
-        email: feedback.isAnonymous ? '' : feedback.email,
-        submissionType: feedback.isAnonymous ? 'Anonymous' : 'Named'
-      };
-
-      console.log('Saving to Google Sheets:', payload);
-
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload)
-      });
-
-      console.log('Data sent to Google Sheets successfully');
-    } catch (error) {
-      console.error('Error saving to Google Sheets:', error);
-    }
   };
 
   const getRandomThankYouMessage = () => {
